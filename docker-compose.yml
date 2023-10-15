@@ -1,0 +1,29 @@
+version: '3.9'
+
+services:
+    app:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        volumes:
+            - ./src:/rtk
+        ports:
+            - "8000:8000"
+        command: uvicorn app.main:app --host 0.0.0.0 --reload
+        depends_on:
+            - db
+
+    db:
+        image: postgres:14-alpine
+        volumes:
+            - rtk-postgres-data:/var/lib/postgresql/data
+        ports:
+            - "5439:5432"
+        environment:
+            - POSTGRES_USER=rtk
+            - POSTGRES_PASSWORD=rtk
+            - POSTGRES_DB=rtk
+
+
+volumes:
+    rtk-postgres-data:
