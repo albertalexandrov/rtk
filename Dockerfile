@@ -4,6 +4,7 @@ WORKDIR /rtk
 
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
+ENV PYTHONPATH .
 
 COPY requirements.txt /tmp/
 RUN pip install -r /tmp/requirements.txt
