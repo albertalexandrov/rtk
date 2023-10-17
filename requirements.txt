@@ -7,3 +7,4 @@ sqlalchemy-utils==0.41.1
 asyncpg==0.28.0
 pytest==7.4.2
 pytest-asyncio==0.21.1
+email-validator==2.0.0
