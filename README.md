@@ -48,9 +48,9 @@ make start
 
 ## Ссылки 
 
-- [Swagger](http://localhost:8000/docs)
-- [Control Center](http://localhost:9021)
-- БД будет доступна по адресу `localhost:5432`
+- `http://localhost:8000/docs` (Swagger)
+- `http://localhost:9021` (Control Center)
+- `http://localhost:5432` (БД)
 
 ## Тесты
 
