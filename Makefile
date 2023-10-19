@@ -11,4 +11,4 @@ down:
 	docker-compose down
 
 test:
-	docker-compose exec -it app pytest tests/test_api.py::TestUpdateUser -s
+	docker-compose exec -it app pytest
