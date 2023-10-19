@@ -28,6 +28,8 @@ class PageNumberPagination:
     """Пагинатор.
 
     Notes:
+        Библиотека https://github.com/uriyyo/fastapi-pagination мне не понравилась из-за
+        странной инициализации
         Здесь обходимся без репозиториев, тк по моему мнению репозиторий не должен работать
         с фильтрами fastapi_filter.Filter
         Предлагается рассматривать пагинатор как частный случай пользовательского кейса (use case)
@@ -67,7 +69,7 @@ class PageNumberPagination:
             results=await self._get_results(stmt),
         )
 
-    async def _get_count(self, stmt: Select):
+    async def _get_count(self, stmt: Select) -> int:
         """Возвращает общее количество элементов.
 
         Args:
@@ -127,7 +129,6 @@ class PageNumberPagination:
 
     @property
     def offset(self):
-        """Возвращает смещение."""
         return (self._page - 1) * self._page_size
 
     async def _get_results(self, stmt: Select) -> list[M]:
@@ -135,6 +136,10 @@ class PageNumberPagination:
 
         Args:
             stmt: sql-запрос
+
+        Notes:
+            stmt передаем снаружи, тк невозможно предусмотреть все кейсы,
+            чтобы генерировать stmt внутри.  Также это видится неудобным
 
         """
 

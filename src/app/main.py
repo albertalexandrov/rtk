@@ -39,6 +39,8 @@ async def shutdown_event():
 
 @app.get("/produce")
 async def produce():
+    """Ручка для отправки тестовых сообщений в топик users."""
+
     msg = """
         <ns2:Request xmlns:ns2="urn://www.example.com">
             <ns2:User>
@@ -48,5 +50,7 @@ async def produce():
                 <ns2:Birthday>2005-10-23T04:00:00+03:00</ns2:Birthday>
             </ns2:User>
         </ns2:Request>""".encode()
+
     await producer.send(settings.kafka.consume_topic, msg)
+
     return "Сообщение отправлено"

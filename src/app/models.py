@@ -15,6 +15,7 @@ class User(Base):
     name: Mapped[str] = mapped_column(String(255), comment="Имя")
     surname: Mapped[str] = mapped_column(String(255), comment="Фамилия")
     email: Mapped[str] = mapped_column(String(255), comment="Email")
+    # в примере birthday - datetime, хотя по идее должна быть дата
     birthday: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), comment="Дата и время рождения"
     )
