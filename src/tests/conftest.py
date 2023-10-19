@@ -2,10 +2,13 @@ import asyncio
 import logging
 
 import pytest
+from httpx import AsyncClient
 from sqlalchemy import URL
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 
 from app.config import settings
+from app.dependencies.database import get_session
+from app.main import app
 from app.repositories import UsersRepository
 from tests.database import generate_test_database, create_database, migrate, drop_database
 
@@ -72,3 +75,17 @@ async def session(engine):
 @pytest.fixture
 async def users_repository(session):
     return UsersRepository(session)
+
+
+@pytest.fixture()
+async def client():
+    async with AsyncClient(app=app, base_url="http://test") as client:
+        yield client
+
+
+@pytest.fixture(autouse=True)
+async def session_override(session):
+    async def get_session_override():
+        yield session
+
+    app.dependency_overrides[get_session] = get_session_override
