@@ -1,6 +1,5 @@
 import asyncio
 
-import uvicorn
 from fastapi import FastAPI
 
 from aiokafka import AIOKafkaConsumer, AIOKafkaProducer
@@ -36,24 +35,18 @@ async def startup_event():
 @app.on_event("shutdown")
 async def shutdown_event():
     await producer.stop()
-    # await consumer.stop()
 
 
-@app.get("/")
-async def index():
-    print("отправка")
-    msg = """<ns2:Request xmlns:ns2="urn://www.example.com">
-            <ns2:KafkaUser>
-            <ns2:Name>Иван</ns2:Name>
-            <ns2:Surname>Иванов</ns2:Surname>
-            <ns2:Email>ivan.ivanov.2023.2024@yandex.com</ns2:Email>
-            <ns2:Birthday>2005-10-23T04:00:00+03:00</ns2:Birthday>
-            </ns2:KafkaUser>
-            </ns2:Request>""".encode()
+@app.get("/produce")
+async def produce():
+    msg = """
+        <ns2:Request xmlns:ns2="urn://www.example.com">
+            <ns2:User>
+                <ns2:Name>Иван</ns2:Name>
+                <ns2:Surname>Иванов</ns2:Surname>
+                <ns2:Email>ivan.ivanov.2023.2024@yandex.com</ns2:Email>
+                <ns2:Birthday>2005-10-23T04:00:00+03:00</ns2:Birthday>
+            </ns2:User>
+        </ns2:Request>""".encode()
     await producer.send(settings.kafka.consume_topic, msg)
-    print("отправили")
     return "Сообщение отправлено"
-
-
-if __name__ == "__main__":
-    uvicorn.run("main:app", port=8003, reload=True)

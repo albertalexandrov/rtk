@@ -19,7 +19,7 @@ services:
         volumes:
             - rtk-postgres-data:/var/lib/postgresql/data
         ports:
-            - "5439:5432"
+            - "5432:5432"
         environment:
             - POSTGRES_USER=rtk
             - POSTGRES_PASSWORD=rtk

@@ -44,10 +44,13 @@ make stop
 make start
 ```
 
+Тестовое сообщение в топик `users` отправит ручка GET `/produce`.
+
 ## Ссылки 
 
 - [Swagger](http://localhost:8000/docs)
 - [Control Center](http://localhost:9021)
+- БД будет доступна по адресу `localhost:5432`
 
 ## Тесты
 
@@ -55,4 +58,12 @@ make start
 
 ```shell
 make test
+```
+
+## Форматирование стилей
+
+Для форматирования стилей (`autoflake`, `isort`, `black`) выполните команду:
+
+```shell
+./pre_commit_styles.sh
 ```
