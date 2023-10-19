@@ -29,8 +29,19 @@ class DatabaseSettings(BaseSettings):
         return url.render_as_string(hide_password=False)
 
 
+class KafkaSettings(BaseSettings):
+    class Config:
+        env_file = ".env"
+        env_prefix = "KAFKA_"
+
+    bootstrap_servers: str
+    consume_topic: str
+    feedback_topic: str
+
+
 class Settings(BaseSettings):
     db: DatabaseSettings = DatabaseSettings()
+    kafka: KafkaSettings = KafkaSettings()
 
 
 settings = Settings()

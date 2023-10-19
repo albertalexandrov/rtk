@@ -33,7 +33,7 @@ class CreateUserUseCase:
     async def create_user(self, create_data: UserCreateData):
         user = await self._users_repository.create(**create_data.model_dump())
         await self._users_repository.commit()
-        user = await self._users_repository.refresh(user)
+        await self._users_repository.refresh(user)
 
         return user
 

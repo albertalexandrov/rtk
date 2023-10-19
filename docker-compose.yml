@@ -12,6 +12,7 @@ services:
         command: uvicorn app.main:app --host 0.0.0.0 --reload
         depends_on:
             - db
+            - broker
 
     db:
         image: postgres:14-alpine
