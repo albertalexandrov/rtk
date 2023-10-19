@@ -5,7 +5,7 @@ from pathlib import Path
 
 from alembic import command
 from alembic.config import Config
-from sqlalchemy import Connection, text, URL
+from sqlalchemy import URL, Connection, text
 from sqlalchemy.ext.asyncio import create_async_engine
 
 from app.config import settings
@@ -28,7 +28,9 @@ async def create_database(url: URL, database: str) -> None:
 
     async with engine.connect() as conn:
         LOGGER.info(f"Создание тестовой БД {database}")
-        await conn.execute(text(f'CREATE DATABASE "{database}" ENCODING "utf8" TEMPLATE template1'))
+        await conn.execute(
+            text(f'CREATE DATABASE "{database}" ENCODING "utf8" TEMPLATE template1')
+        )
         LOGGER.info(f"Тестовая БД {database} создана")
 
     await engine.dispose()

@@ -12,8 +12,9 @@ LOGGER = logging.getLogger(__name__)
 
 
 class GetUserUseCase:
-
-    def __init__(self, users_repository: UsersRepository = Depends(get_users_repository)):
+    def __init__(
+        self, users_repository: UsersRepository = Depends(get_users_repository)
+    ):
         self._users_repository = users_repository
 
     async def get_user_or_404(self, user_id: int):
@@ -26,8 +27,9 @@ class GetUserUseCase:
 
 
 class CreateUserUseCase:
-
-    def __init__(self, users_repository: UsersRepository = Depends(get_users_repository)):
+    def __init__(
+        self, users_repository: UsersRepository = Depends(get_users_repository)
+    ):
         self._users_repository = users_repository
 
     async def create_user(self, create_data: UserCreateData):
@@ -39,8 +41,9 @@ class CreateUserUseCase:
 
 
 class UpdateUserUseCase:
-
-    def __init__(self, users_repository: UsersRepository = Depends(get_users_repository)):
+    def __init__(
+        self, users_repository: UsersRepository = Depends(get_users_repository)
+    ):
         self._users_repository = users_repository
 
     async def update_user_or_404(self, user_id: int, update_data: UserUpdateData):
@@ -49,7 +52,9 @@ class UpdateUserUseCase:
         except sqlalchemy.exc.NoResultFound:
             raise Http404
 
-        user = await self._users_repository.update(user, **update_data.model_dump(exclude_unset=True))
+        user = await self._users_repository.update(
+            user, **update_data.model_dump(exclude_unset=True)
+        )
         await self._users_repository.commit()
         await self._users_repository.refresh(user)
 
@@ -57,8 +62,9 @@ class UpdateUserUseCase:
 
 
 class DeleteUserUseCase:
-
-    def __init__(self, users_repository: UsersRepository = Depends(get_users_repository)):
+    def __init__(
+        self, users_repository: UsersRepository = Depends(get_users_repository)
+    ):
         self._users_repository = users_repository
 
     async def delete_user_or_404(self, user_id: int):

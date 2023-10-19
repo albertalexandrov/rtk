@@ -3,8 +3,8 @@ from unittest.mock import AsyncMock
 
 import pytest
 import sqlalchemy.exc
-from aiokafka import ConsumerRecord
 
+from aiokafka import ConsumerRecord
 from app.config import settings
 from app.kafka import consume
 from app.models import User
@@ -12,7 +12,6 @@ from app.repositories import UsersRepository
 
 
 class Consumer:
-
     def __init__(self, seq):
         super().__init__()
         self.iter = iter(seq)
@@ -73,27 +72,32 @@ class TestConsume:
         with mock.patch("app.kafka.send_success_feedback") as send_success_feedback:
             await consume(consumer, self.producer, users_repository)
 
-            assert (user := await users_repository.get(
-                User.name == "Иван", User.surname == "Иванов", User.email == "ivan.ivanov.2023.2024@yandex.com",
-            ))
+            assert (
+                user := await users_repository.get(
+                    User.name == "Иван",
+                    User.surname == "Иванов",
+                    User.email == "ivan.ivanov.2023.2024@yandex.com",
+                )
+            )
             send_success_feedback.assert_called_once_with(self.producer, user.id)
 
     @pytest.mark.parametrize(
-        "field,bad_value", [
+        "field,bad_value",
+        [
             ("name", ""),
             ("name", "a" * 256),
             ("surname", ""),
             ("surname", "a" * 256),
             ("email", "NOT-EMAIL"),
             ("email", "a" * 255 + "@mail.ru"),
-        ]
+        ],
     )
     async def test_user_not_created(self, field, bad_value, users_repository):
         values = {
             "name": "Иван",
             "surname": "Иванов",
             "email": "ivan.ivanov.2023.2024@yandex.com",
-            "birthday": "2005-10-23T04:00:00+03:00"
+            "birthday": "2005-10-23T04:00:00+03:00",
         }
         values[field] = bad_value
 
@@ -106,7 +110,9 @@ class TestConsume:
                     <ns2:Birthday>{birthday}</ns2:Birthday>
                 </ns2:KafkaUser>
             </ns2:Request>
-        """.format_map(values)
+        """.format_map(
+            values
+        )
 
         msg = ConsumerRecord(
             topic=settings.kafka.consume_topic,
@@ -128,7 +134,9 @@ class TestConsume:
 
             with pytest.raises(sqlalchemy.exc.NoResultFound):
                 await users_repository.get(
-                    User.name == values["name"], User.surname == values["surname"], User.email == values["email"],
+                    User.name == values["name"],
+                    User.surname == values["surname"],
+                    User.email == values["email"],
                 )
 
             send_failed_feedback.assert_called_once_with(self.producer, values)

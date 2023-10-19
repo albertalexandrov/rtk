@@ -1,9 +1,9 @@
 import asyncio
 
 import uvicorn
-from aiokafka import AIOKafkaConsumer, AIOKafkaProducer
 from fastapi import FastAPI
 
+from aiokafka import AIOKafkaConsumer, AIOKafkaProducer
 from app.config import settings
 from app.database import SessionLocal
 from app.kafka import consume
@@ -15,8 +15,14 @@ app.include_router(router)
 
 loop = asyncio.get_event_loop()
 
-consumer = AIOKafkaConsumer(settings.kafka.consume_topic, loop=loop, bootstrap_servers=settings.kafka.bootstrap_servers)
-producer = AIOKafkaProducer(loop=loop, bootstrap_servers=settings.kafka.bootstrap_servers)
+consumer = AIOKafkaConsumer(
+    settings.kafka.consume_topic,
+    loop=loop,
+    bootstrap_servers=settings.kafka.bootstrap_servers,
+)
+producer = AIOKafkaProducer(
+    loop=loop, bootstrap_servers=settings.kafka.bootstrap_servers
+)
 
 
 @app.on_event("startup")
@@ -49,6 +55,5 @@ async def index():
     return "Сообщение отправлено"
 
 
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     uvicorn.run("main:app", port=8003, reload=True)

@@ -4,13 +4,18 @@ import logging
 import pytest
 from httpx import AsyncClient
 from sqlalchemy import URL
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
+from tests.database import (
+    create_database,
+    drop_database,
+    generate_test_database,
+    migrate,
+)
 
 from app.config import settings
 from app.dependencies.database import get_session
 from app.main import app
 from app.repositories import UsersRepository
-from tests.database import generate_test_database, create_database, migrate, drop_database
 
 LOGGER = logging.getLogger(__name__)
 

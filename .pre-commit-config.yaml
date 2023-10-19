@@ -1,0 +1,21 @@
+repos:
+  - repo: local
+    hooks:
+      - id: autoflake
+        name: autoflake
+        entry: autoflake --in-place --remove-all-unused-imports --ignore-init-module-imports -r src
+        language: system
+        types: [python]
+        require_serial: true
+        exclude: ^venv/
+  - repo: https://github.com/timothycrosley/isort
+    rev: '4.3.21'
+    hooks:
+      - id: isort
+        exclude: ^venv/
+  - repo: https://github.com/psf/black
+    rev: '22.3.0'
+    hooks:
+      - id: black
+        language: python
+        exclude: ^venv/

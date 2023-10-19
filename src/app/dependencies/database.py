@@ -11,4 +11,3 @@ async def get_session():
     finally:
         print("закрытие сесиси")
         await session.close()
-

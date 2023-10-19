@@ -1,25 +1,27 @@
-from typing import TypeVar, Generic
+from typing import Generic, TypeVar
 
-from fastapi import Query, Depends
-from pydantic import Field, AnyUrl, BaseModel
-from sqlalchemy import select, func, Select
+from fastapi import Depends, Query
+from pydantic import AnyUrl, BaseModel, Field
+from sqlalchemy import Select, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.requests import Request
 
 from app.dependencies.database import get_session
 
-M = TypeVar('M')
+M = TypeVar("M")
 
 
 class PaginatedResponse(BaseModel, Generic[M]):
-    count: int = Field(description='Общее количество записей', example=22)
+    count: int = Field(description="Общее количество записей", example=22)
     next: AnyUrl | None = Field(
-        description="Ссылка на следующую страницу", example="http://localhost:8000/users?page=3&page_size=10"
+        description="Ссылка на следующую страницу",
+        example="http://localhost:8000/users?page=3&page_size=10",
     )
     previous: AnyUrl | None = Field(
-        description="Ссылка на предыдущую страницу", example="http://localhost:8000/users?page=1&page_size=10"
+        description="Ссылка на предыдущую страницу",
+        example="http://localhost:8000/users?page=1&page_size=10",
     )
-    results: list[M] = Field(description='Результат')
+    results: list[M] = Field(description="Результат")
 
 
 class PageNumberPagination:
@@ -35,15 +37,18 @@ class PageNumberPagination:
     max_results = 100
 
     def __init__(
-        self, request: Request,
+        self,
+        request: Request,
         page: int = Query(1, gt=0),
         page_size: int = Query(10, gt=0),
-        session: AsyncSession = Depends(get_session)
+        session: AsyncSession = Depends(get_session),
     ):
         self._request = request
         self._session = session
         self._page = page
-        self._page_size = page_size if page_size <= self.max_results else self.max_results
+        self._page_size = (
+            page_size if page_size <= self.max_results else self.max_results
+        )
 
     async def get_page(self, stmt: Select) -> PaginatedResponse:
         """Возвращает результат пагинации в соответствии с фильтрами.
@@ -59,7 +64,7 @@ class PageNumberPagination:
             count=count,
             next=self._get_next_page(count),
             previous=self._get_previous_page(count),
-            results=await self._get_results(stmt)
+            results=await self._get_results(stmt),
         )
 
     async def _get_count(self, stmt: Select):
@@ -70,7 +75,9 @@ class PageNumberPagination:
 
         """
 
-        count = await self._session.scalar(select(func.count()).select_from(stmt.subquery()))
+        count = await self._session.scalar(
+            select(func.count()).select_from(stmt.subquery())
+        )
 
         return count
 

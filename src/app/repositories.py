@@ -20,7 +20,7 @@ class Repository:
 
     def __init__(self, session: AsyncSession):
         if self.model is None:
-            raise ValueError(f'Не определен атрибут {self.__class__.__name__}.model')
+            raise ValueError(f"Не определен атрибут {self.__class__.__name__}.model")
 
         self._session = session
 

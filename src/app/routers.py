@@ -7,7 +7,12 @@ from starlette import status
 from app.models import User
 from app.pagination import PageNumberPagination, PaginatedResponse
 from app.schemas import UserCreateData, UserSchema, UserUpdateData
-from app.usecases import GetUserUseCase, CreateUserUseCase, DeleteUserUseCase, UpdateUserUseCase
+from app.usecases import (
+    CreateUserUseCase,
+    DeleteUserUseCase,
+    GetUserUseCase,
+    UpdateUserUseCase,
+)
 
 LOGGER = logging.getLogger(__name__)
 
@@ -26,13 +31,24 @@ async def get_user(user_id: int, use_case: GetUserUseCase = Depends()):
     return await use_case.get_user_or_404(user_id)
 
 
-@router.post("", response_model=UserSchema, status_code=status.HTTP_201_CREATED, summary="Создает пользователя")
-async def create_user(create_data: UserCreateData, use_case: CreateUserUseCase = Depends()):
+@router.post(
+    "",
+    response_model=UserSchema,
+    status_code=status.HTTP_201_CREATED,
+    summary="Создает пользователя",
+)
+async def create_user(
+    create_data: UserCreateData, use_case: CreateUserUseCase = Depends()
+):
     return await use_case.create_user(create_data)
 
 
-@router.patch("/{user_id}", response_model=UserSchema, summary="Обновление пользователя")
-async def update_user(user_id: int, update_data: UserUpdateData, use_case: UpdateUserUseCase = Depends()):
+@router.patch(
+    "/{user_id}", response_model=UserSchema, summary="Обновление пользователя"
+)
+async def update_user(
+    user_id: int, update_data: UserUpdateData, use_case: UpdateUserUseCase = Depends()
+):
     return await use_case.update_user_or_404(user_id, update_data)
 
 

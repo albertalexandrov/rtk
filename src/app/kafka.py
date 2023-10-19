@@ -2,12 +2,12 @@ import logging
 import xml.etree.ElementTree as ET
 from datetime import datetime
 
-from aiokafka import AIOKafkaConsumer, AIOKafkaProducer
 from pydantic import BaseModel, EmailStr, Field
-from pydantic_core import ValidationError
 
+from aiokafka import AIOKafkaConsumer, AIOKafkaProducer
 from app.config import settings
 from app.repositories import UsersRepository
+from pydantic_core import ValidationError
 
 LOGGER = logging.getLogger(__name__)
 
@@ -34,7 +34,12 @@ def parse(msg: str) -> dict:
     email = xml.find(".//ns2:Email", namespaces).text
     birthday = xml.find(".//ns2:Birthday", namespaces).text
 
-    return {"name": name or "", "surname": surname or "", "email": email or "", "birthday": birthday or ""}
+    return {
+        "name": name or "",
+        "surname": surname or "",
+        "email": email or "",
+        "birthday": birthday or "",
+    }
 
 
 async def send_success_feedback(producer: AIOKafkaProducer, user_id: int):
@@ -77,7 +82,9 @@ async def send_failed_feedback(producer: AIOKafkaProducer, user_data: dict):
                 <ns2:Status>FAILED</ns2:Status
             </ns2:KafkaUser>
         </ns2:Response>
-    """.format_map(user_data)
+    """.format_map(
+        user_data
+    )
 
     await send_feedback(producer, msg.strip().encode())
 
@@ -94,7 +101,11 @@ async def send_feedback(producer: AIOKafkaProducer, msg: bytes) -> None:
     await producer.send(settings.kafka.feedback_topic, msg)
 
 
-async def consume(consumer: AIOKafkaConsumer, producer: AIOKafkaProducer, users_repository: UsersRepository) -> None:
+async def consume(
+    consumer: AIOKafkaConsumer,
+    producer: AIOKafkaProducer,
+    users_repository: UsersRepository,
+) -> None:
     """Обработка сообщений из топика.
 
     Args:

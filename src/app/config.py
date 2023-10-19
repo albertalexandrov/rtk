@@ -1,5 +1,6 @@
-from pydantic_settings import BaseSettings
 from sqlalchemy import URL
+
+from pydantic_settings import BaseSettings
 
 
 class DatabaseSettings(BaseSettings):

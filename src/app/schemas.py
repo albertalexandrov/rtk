@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from pydantic import BaseModel, Field, EmailStr
+from pydantic import BaseModel, EmailStr, Field
 
 
 class UserSchema(BaseModel):
@@ -16,13 +16,21 @@ class UserSchema(BaseModel):
 
 class UserCreateData(BaseModel):
     name: str = Field(min_length=1, max_length=255, title="Имя", example="Сергей")
-    surname: str = Field(min_length=1, max_length=255, title="Фамилия", example="Иванов")
+    surname: str = Field(
+        min_length=1, max_length=255, title="Фамилия", example="Иванов"
+    )
     email: EmailStr = Field(max_length=255, title="Email", example="serg.ivanov@rtk.ru")
     birthday: datetime = Field(title="Дата и время рождения")
 
 
 class UserUpdateData(BaseModel):
-    name: str = Field(default=None, min_length=1, max_length=255, title="Имя", example="Сергей")
-    surname: str = Field(default=None, min_length=1, max_length=255, title="Фамилия", example="Иванов")
-    email: EmailStr = Field(default=None, max_length=255, title="Email", example="serg.ivanov@rtk.ru")
+    name: str = Field(
+        default=None, min_length=1, max_length=255, title="Имя", example="Сергей"
+    )
+    surname: str = Field(
+        default=None, min_length=1, max_length=255, title="Фамилия", example="Иванов"
+    )
+    email: EmailStr = Field(
+        default=None, max_length=255, title="Email", example="serg.ivanov@rtk.ru"
+    )
     birthday: datetime = Field(default=None, title="Дата и время рождения")
